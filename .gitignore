@@ -6,6 +6,9 @@ __pycache__/
 # Folder
 DATA/*
 
+# File
+config.py
+
 # C extensions
 *.so
 
