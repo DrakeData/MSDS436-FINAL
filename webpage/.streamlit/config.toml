@@ -1,0 +1,22 @@
+[theme]
+
+## Use Google color picker to get HEX code: https://htmlcolors.com/google-color-picker
+
+# The preset Streamlit theme that your custom theme inherits from. One of "light" or "dark".
+base = 'dark'
+# Primary accent for interactive elements
+primaryColor = '#7792E3'
+
+# Background color for the main content area
+backgroundColor = '#273346'
+
+# Background color for sidebar and most interactive widgets
+secondaryBackgroundColor = '#348DD1'
+
+# Color used for almost all text
+textColor = '#FFFFFF'
+
+# Font family for all text in the app, except code blocks
+# Accepted values (serif | sans serif | monospace) 
+# Default: "sans serif"
+font = "sans serif"
