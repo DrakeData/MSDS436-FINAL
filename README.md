@@ -65,11 +65,93 @@ Due to the cost per call model, we decided to limit our cost by only using the l
 (Need to update)
 - API Key from OpenWeather
 - AWS Account
+- [PostgreSQL (Desktop)](https://www.postgresql.org/)
 - Requiremnt.txt
 
 ## Configuration
 
 ## Project Details
+### Step 1: Gather the data
+We first needed to extract the necisary data from Divvy's website, make API calls to OSRM and OpenWeather API, and clean the data set
+
+### Step 2: Load csv file into AWS S3 Bucket
+To create an Amazon Simple Storage Service (S3) bucket, we needed to set up an [AWS account](https://aws.amazon.com/) and then [setup the S3 bucket](https://www.sqlshack.com/getting-started-with-amazon-s3-and-python/). The bucket name for our S3 bucket is `msds436-final`. 
+
+Using Python, we were able to automate this proces to load the created csv files into our S3 bucket. The Python script creates a folder called `files` in the S3 bucket and saves the csv file in it.
+
+**Python example:**
+
+![python_s3_example](images/python_s3_load.PNG)
+
+**File in S3:**
+
+![s3_file](images/aws_s3.PNG)
+
+### Step 3: Spin up PostgreSQL server to use as our Data Lake (DL), create a relational data model and load the curated data from S3 buckets.
+
+- To spin up a PostgreSQL server, follow this helpful AWS resources: 
+    * Document: [Create and Connect to a PostgreSQL Database
+with Amazon RDS](https://aws.amazon.com/getting-started/hands-on/create-connect-postgresql-db/)
+    * YouTube Video: [AWS RDS Aurora Postgres Database Setup | Step by Step Tutorial](https://youtu.be/vw5EO5Jz8-8)
+
+**NOTE:** Make sure to add these inbound security rules:
+    
+![aws_sr](images/aws_sr.PNG)
+
+- Once your PostgreSQL server is available, open up pgAdmin and add a new server.
+
+![aws_active_db](images/aws_active_db.PNG)
+![paAdmin_Connect](images/pgadmin_connect.PNG)
+
+- Using pgAdmin Query Tool, install `aws_commmon' by run:
+    
+        CREATE EXTENSION aws_s3 CASCADE;
+
+![pgAdmin](images/pgadmin_qtool.PNG)
+
+- Then create table called `bike_data`:
+       
+        CREATE TABLE bike_data (ride_id varchar(120) primary key,
+					rideable_type varchar(120) NOT NULL,
+					started_at date,
+					ended_at date,
+					start_station_name varchar(120) NOT NULL,
+					start_station_id varchar(120) NOT NULL,
+					end_station_name varchar(120) NOT NULL,
+					end_station_id varchar(120) NOT NULL, 
+					start_lat numeric,
+					start_lng numeric,
+					end_lat numeric,
+					end_lng numeric,
+					member_casual varchar(120),
+					started_at_clean date,
+					duration numeric,
+					distance numeric,
+					started_at_unix integer,
+					temp numeric,
+					hum numeric,
+					windsp numeric,
+					weather varchar(120),
+					rain numeric,
+					snow numeric
+					);
+    
+- Using pgAdmin, load data from S3 to Postgres
+
+        SELECT aws_s3.table_import_from_s3('bike_data', 'ride_id,rideable_type,started_at,ended_at,start_station_name,start_station_id,end_station_name,end_station_id,start_lat,start_lng,end_lat,end_lng,member_casual,started_at_clean,duration,distance,started_at_unix,temp,hum,windsp,weather,rain,snow',
+        '(format csv, header true)',
+        'msds436-final',
+        'files/202209_divvy_distance_weather.csv',
+        'us-east-2',
+        'YOUR_AWS_ACCESS_KEY', 
+        'YOUR_AWS_SECRET_KEY' 
+        );
+
+- You will now be able to query the DL using Python.
+
+**EXAMPLE:**
+
+![python_query](images/python_q_dl.PNG)
 
 ## EDA
 
