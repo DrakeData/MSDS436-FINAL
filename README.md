@@ -71,6 +71,15 @@ Due to the cost per call model, we decided to limit our cost by only using the l
 ## Configuration
 
 ## Project Details
+For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using AWS platform, Python, and Spark.
+
+## Architecture
+Here is an overview for our project architecture:
+
+![project_arch](images/project_arch.png)
+
+## Architecture Details
+
 ### Step 1: Gather the data
 We first needed to extract the necisary data from Divvy's website, make API calls to OSRM and OpenWeather API, and clean the data set
 
