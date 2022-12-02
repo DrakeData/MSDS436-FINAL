@@ -4,18 +4,14 @@ This repository contains code used for MSDS 436 Final Project
 ## Table of Contents
 - [Introduction](#introduction)
 - [About the Data](#about-the-data)
-  * [Divvy Ride Data](#divvy-ride-data)
-  * [Open Source Routing Machine (OSRM) API](#open-source-routing-machine-(osrm)-api)
-  * [OpenWeather API](#openweather-api)
 - [Requirements](#requirements)
 - [Configuration](#configuration)
 - [Project Details](#project-details)
+- [Architecture](#architecture)
 - [EDA](#eda)
 - [Models](#models)
 - [Future Enhancements](#future-enhancements)
-- [Troubleshooting & FAQ](#troubleshooting-&-faq)
 - [Project Owners](#project-owners)
-
 
 ## Introduction
 As a leading bike share service in the city of Chicago, [Divvy's data](https://ride.divvybikes.com/system-data) offers unique opportunities to model human flow patterns.
@@ -77,8 +73,6 @@ For this project, we will be building an end-to-end process of gathering, prepar
 Here is an overview for our project architecture:
 
 ![project_arch](images/project_arch.png)
-
-## Architecture Details
 
 ### Step 1: Gather the data
 We first needed to extract the necisary data from Divvy's website, make API calls to OSRM and OpenWeather API, and clean the data set
@@ -178,9 +172,6 @@ Two ordinary least squares regression was performed on each station: one for dai
 We recommend the next step of this project be to use the latitude and longitude station data to identify station proximity, and recommend bike movement between stations with overage and shortage within close physical proximity—furthering cost saving efforts.
 
 ## Future Enhancements
-
-## Troubleshooting & FAQ
-
 
 ## Project Owners
 - [Katie Gaertner](https://github.com/katiegaertner)
