@@ -156,6 +156,56 @@ with Amazon RDS](https://aws.amazon.com/getting-started/hands-on/create-connect-
 
 ![python_query](images/python_q_dl.PNG)
 
+## Deploy Streamlit Application
+
+### Docker
+
+
+### AWS
+- Download [Docker](https://docs.docker.com/get-docker/) for desktop and open it when download. Docker needs to run in the background for the following to work.
+- Download the [AWS CLI Tool](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) for desktop.
+- In the comand line, set your AWS Key ID and AWS Key buy running:
+		
+		aws configure
+
+- Grab the first part of the push commands that AWS provides
+
+![aws_ec1](images/aws_ec1.PNG)
+
+**NOTE:** Refer to [this part of the video](https://youtu.be/Jc5GI3v2jtE?t=208) if you run into access issues.
+
+- Build Docker Image (make sure you are in the same directory as the Dockerfile built)
+			
+			docker build -f Dockerfile msds436-final-app:latest .
+
+- Tag the image created
+
+		docker tag msds436-final-app:latest public.ecr.aws/k3u1k7f7/msds436-final:latest
+
+- Lastly, push the image
+
+		docker push public.ecr.aws/k3u1k7f7/msds436-final:latest 
+
+Once the image is pushed, you will see it in your AWS repositorie. Note that you will want to copy the URI to create the ECS cluster (found in Elastic Container Service).
+
+![aws_ec2](images/aws_ec2.PNG)
+
+- Create cluster, then go to 'Task Definitions'
+	* Create new Task Definition
+	* Select EC2
+	* Enter name of Definition, Task memory = 1024, and Task CPU = 256
+	* Then click on 'Add container', enter name and past URI that you copied into the 'Image' box
+	* Set port mappings as: 80 850
+	* Leave everything else as is and click 'Add'
+
+![aws_ec3](images/aws_ec3.PNG)
+
+- Leave the rest of the Task Definition as defult and click create
+- Go back to the cluster and assign the task ([see video](https://youtu.be/Jc5GI3v2jtE?t=657)).
+- Go to EC2 Dashboard, click on 'Instances', then open the public URL. Your streamlit app should now be deployed.
+
+![aws_ec4](images/aws_ec4.PNG)
+
 ## EDA
 
 ## Models
