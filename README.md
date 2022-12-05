@@ -62,7 +62,7 @@ Due to the cost per call model, we decided to limit our cost by only using the l
 - [AWS Account](https://aws.amazon.com/)
 - [PostgreSQL (Desktop)](https://www.postgresql.org/)
 - [Docker (Desktop)](https://docs.docker.com/get-docker/)
-- [requirements.txt]()
+- [requirements.txt]
 
 ## Project Details
 For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using AWS platform, Python, and Spark. 
