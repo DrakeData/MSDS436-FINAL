@@ -57,7 +57,6 @@ We gathered the following data points from the API:
 Due to the cost per call model, we decided to limit our cost by only using the latitude and longitude of the center of Chicago (41.87, -87.62) and only pulling back 24 hours of data per day (total of 720 API calls).
 
 ## Requirements
-(Need to update)
 - [API Key from OpenWeather](https://openweathermap.org/api/one-call-3)
 - [AWS Account](https://aws.amazon.com/)
 - [PostgreSQL (Desktop)](https://www.postgresql.org/)
@@ -151,9 +150,51 @@ with Amazon RDS](https://aws.amazon.com/getting-started/hands-on/create-connect-
 
 ![python_query](images/python_q_dl.PNG)
 
-### Step 4: Run EDA to exam the data
-[WAITING FOR INFO]
+### Step 4: EDA
+**NOTE:** EDA was performed in PySpark and Pandas.
+
+![sparkEDA_total](images/sparkEDA_total.png)
+
+The above snip of code demonstrates initial statistics of the Divvy dataset, processed using Spark. Spark was used to level-set on feature characteristics before executing data cleansing, wrangling, and feature enrichment.
+
+![map](images/map_image.jpg)
+
+This image represents the initial reference points for historic Chicago. Madison St and State St serve as zeroed lines of demarcation from which Chicago is divided East/West and North/South. While this would be one method in quadrant-izing the map, there are more accurate ways to measure distribution, in order to create quadrants with more balance.
+
+![latlngdist](images/latlngdist.png)
+
+In assessing the best way to create ride activity quadrants, Madison St and State St were juxtaposed with the Divvy dataset's mean latitude/longitude values, as well as the 50% quartile values. All 3 are overlaid onto the starting point distribution as shown. Ultimately, the mean value was chosen to represent an initial quadrant approach, as it is the most agile metric, given that ride activity could shift in the future.
+
+![hist_member_ridetime_dist](images/hist_member_ridetime_dist.png)
+
+This histogram series represents volume of ride time (in seconds) for each of the membership classes, binned by time difference (actual minus predicted. The key insight here is to realize that casual rides carry a much longer right tail of positive time difference, meaning casual riders seem to represent a majority of human flow "peddle-meddling".
+
+![hist_ridetype_ridetime_dist](images/hist_ridetype_ridetime_dist.png)
+
+These histograms show volume of ridetime per each bike type, and demonstrate how bike type affects time difference assessments. Unsurprisingly, classic bikes were the most popular, and electric bikes carried an average time_diff value below zero, meaning the average ride went faster than predicted. Additionally, docked bikes do not bear much volume weight. This would be interesting data to juxtapose with Divvy's fleet sizes of each bike class, to assess usage and rider preference as opposed to what's available.
+
+![ridetime_dist](images/ridetime_dist.png)
+
+The ride datetime vs. actual time and predicted time proved to be a key visualization in understanding holistic Chicago cycling trends. In general, most Chicago bikers are efficient with their travel - times are less than the OpenStreetMap predicts. However, on weekends, folks seem to flip that trend, taking considerably more time than the estimated travel time predicts. Additionally, on a daily weekday basis, there appears to be moderate travel in the mid-morning hours (7-9am) and moderate travel also occurs in the evenings (5-7pm). The giant travel block mid-Sept 22nd may be due to a White Sox home game!
+
+![pop_routes](images/pop_routes.png)
+
+The above table demonstrating which routes are the most popular. Nearly all are located in the main Chicago downtown area. Several of the top 20 are loops, which could indicate a leisurely weekend ride, a quick errand, or perhaps, in large time difference occasions, a workday commute. Looped routes also make human flow estimation more difficult, as time passage is the only variable that still contributes to potential paths cycled.
+
+![burst_member_ride_day](images/burst_member_ride_day.png)
+
+This sunburst chart demonstrates the distribution across membership class, starting bike station, and day of week. We can see large demand in the main metro area (Streeter Dr, Grand Ave, DuSable Lake Shore, Monroe St, etc...) on Saturdays and Sundays for casual riders, while members appear to utilize the bikes for workday commutes. Additionally, we can see which stations have the most demand across all days, while others only carry demand for some days.
+
+![member_station_hour](images/member_station_hour.png)
+
+Much like the day of week version, this sunburst indicates which times of day show the most traffic, per member class and starting station. Interesting points to show here include the apparent fact that members span a larger station list than casual rides do, and key hours appear to be 6-9am, and 3-6pm.
+
+![burst_quadrant_station](images/burst_quadrant_station.png)
+
+This sunburst simply indicates which stations are most important (aka most used) per quadrant. Again, given that this is a PoC to showcase the ability to box-in key areas of interest, this is an important distinction to understand what station resources are contributing to human flow, and which are not.
+
 ### Step 5: Run models
+#### Station Optimization
 The first ML objective of the project was to use divvy ride and weather data to identify opportunities for internal cost savings, and to predict station over and under supply to anticipate bike transfer needs.
 
 To identify internal cost saving opportunities, we aggregate daily departures and arrivals by station for the month of September. We then collect the maximum daily departure and maximum daily arrival for each station, and identify stations with a maximum departure and arrival of less than or equal to two for the entire month of September. We identify these stations as “low-traffic stations,” and export this list of 480 stations for consideration for closure. To make a final decision, however, we recommend an analysis of year-round data to account for seasonal trends that may influence station usage.
@@ -166,7 +207,13 @@ Two ordinary least squares regression was performed on each station: one for dai
 
 We recommend the next step of this project be to use the latitude and longitude station data to identify station proximity, and recommend bike movement between stations with overage and shortage within close physical proximity—furthering cost saving efforts.
 
+#### Human Flow
+The purpose of utilizing machine learning for Chicago bicycle travel is to predict ride time for any given start/end station, day, time, and quadrant of interest. An actual ride time that has a significantly higher value than predicted ride time can be used to indicate propensity-to-buy. When overlaid with thousands of other trips, common routes can be established in order to highlight areas for business investment, marketing strategies, and low-hanging fruit pedestrian sales opportunities. This is additionally substantiated by the large volume.
+
+A small (n_estimators = 10, random_state = 10) randomforest model was selected as an initial, simple model to demonstrate effectiveness of concept, given onehotencoded data that included: bike type, member class, predicted time, historical time differences, temperature, quadrant, start hour, and end hour. Actual time was the target variable. The model performed with 72.667% accuracy on the test data set, despite relatively low correlation between variables, and relatively low feature importance. 
+
 ### Step 6: Results
+[WAITING ON INFO]
 
 ### Step 7: Build and Deploy Streamlit Application
 ### Pushing Docker Image in AWS
@@ -214,8 +261,22 @@ Once the image is pushed, you will see it in your AWS repository. Note that you 
 
 ![aws_ec4](images/aws_ec4.PNG)
 
-### Step 8: Recommendations and next steps
-[WAITING FOR INFO]
+### Step 8: Recommendations and Next Steps
+#### Data Collection
+1.  API Limits
+	- OpenStreetMap's API has consumption limits for free users, and limited feature sets as well. Given cost constraints for this project's PoC phase, a future state would include integrating more advanced data available from Divvy with recommended map route features that OpenStreetMap provides, in order to actually demonstrate common paths of human flow.
+2. Data Volume
+	- This PoC was limited to 150,000 ride instances, spanning a randomized selection of 5,000 rides per day through September 2022. Consuming a much larger data volume would introduce the ability to assess realistic ride trends on a time basis, as well as enrich existing data explorations.
+3. Feature Engineering
+	- Additional considerations for feature engineering include adding in more weather variables, lag time variables for weather, seasonality, holidays, major events, and bike station proximity to large traffic entities (like the U of Chicago). 
+
+#### Model
+1. Model Simplicity
+	- Computational resources and cost constraints limited the type of modeling that was possible to explore for this project, and the model was not tested on future data. In the future, utilizing more advanced models would be an ideal path to boost performance.
+2. Model Accuracy
+	- Leveraging a dataset that is thousands of times larger than the current scope would enable a model many more reference points from which to predict human flow on a time/place basis.
+3. Model Usability
+	- Once a more robust model is built, high-traffic, high-time-difference areas within the Chicago area can be assessed for propensity-to-buy mapping, enabling B2C investors or current business owners insights into the who, when, and where of potential bicyclist customers. 
 
 ## Architecture
 The architecture shown below represents a combination of Proof-of-Concept (PoC) structure and eventual production environment. The established architecture is a skeleton for scalable project value delivery. Current project state includes local consumption of static data, locally-developed and tested models, a GitHub repository for initial DevOps management, and a Docker-containerized public deployment via Streamlit and the AWS cloud.
@@ -226,9 +287,7 @@ Future state would include additional DevOps functionality, as well as cloud-bas
 ![project_arch](images/project_arch.png)
 
 ## EDA
-EDA was performed in PySpark and Pandas
 
-[WAITING FOR INFO]
 
 ## Project Limitations
 [WAITING FOR INFO]
