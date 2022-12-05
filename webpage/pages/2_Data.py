@@ -25,6 +25,7 @@ img_openweath_logo = Image.open("images/openweath_logo.png")
 # Divvy bike data
 with st.container():
     st.title("About the Data")
+    st.write("---")
     image_column, text_column = st.columns((1,2))
     with image_column:
         st.image(img_divvy_logo)
@@ -40,7 +41,7 @@ with st.container():
         - Trip end station
         - Rider type (Member, Single Ride, and Day Pass)
 
-        For our usecase, we have limited the data set to only the month of September 2022 and rides that only have a start and end station. 
+        For our use case, we have limited the data set to only the month of September 2022 and rides that only have a start and end station. 
         We have also taken a random sample of 5,000 rides per day.
                 ''')
         st.write("##")
@@ -52,8 +53,12 @@ with st.container():
         with text_column:
             st.subheader("Open Source Routing Machine (OSRM) API")
             st.markdown('''
-            To get estimated trip time, we used the [OSRM API](http://project-osrm.org/docs/v5.10.0/api/#general-options). This API combines sophisticated routing algorithms with the open and free road network data of the OpenStreetMap (OSM) project. 
-            To calulate the shortest path for a bike ride, we pass the start and end station's latitude and longitude to return the estimated duration (in seconds) and distance (in meters).
+            To get estimated trip time, we used the OSRM API. 
+            This API combines sophisticated routing algorithms with the open 
+            and free road network data of the OpenStreetMap (OSM) project. 
+            To calculate the shortest path for a bike ride, we pass the start 
+            and end station's latitude and longitude to return the estimated 
+            duration (in seconds) and distance (in meters).
                     ''')
             st.write("##")
     with st.container():
@@ -67,7 +72,7 @@ with st.container():
             To gather historical weather data, we used [OpenWeather's One Call API](https://openweathermap.org/api/one-call-3#data). 
             
             We gathered the following data points from the API:
-            - Tempature (in Fahrenheit)
+            - Temperature (in Fahrenheit)
             - Humidity
             - Wind Speed
             - Weather

@@ -5,11 +5,10 @@ This repository contains code used for MSDS 436 Final Project
 - [Introduction](#introduction)
 - [About the Data](#about-the-data)
 - [Requirements](#requirements)
-- [Configuration](#configuration)
 - [Project Details](#project-details)
 - [Architecture](#architecture)
 - [EDA](#eda)
-- [Models](#models)
+- [Project Limitations](#project-limitations)
 - [Future Enhancements](#future-enhancements)
 - [Project Owners](#project-owners)
 
@@ -33,14 +32,14 @@ The data contains trip information such as:
 - Trip end station
 - Rider type (Member, Single Ride, and Day Pass)
 
-For our usecase, we have limited the data set to only the month of September 2022 and rides that only have a start and end station. 
+For our use case, we have limited the data set to only the month of September 2022 and rides that only have a start and end station. 
 We have also taken a random sample of 5,000 rides per day.
 
 ### Open Source Routing Machine (OSRM) API
 
 ![osrm_logo](images/osrm_logo.png)
 
-To get estimated trip time, we used the [OSRM API](http://project-osrm.org/docs/v5.10.0/api/#general-options). This API combines sophisticated routing algorithms with the open and free road network data of the OpenStreetMap (OSM) project. To calulate the shortest path for a bike ride, we pass the start and end station's latitude and longitude to return the estimated duration (in seconds) and distance (in meters).
+To get estimated trip time, we used the [OSRM API](http://project-osrm.org/docs/v5.10.0/api/#general-options). This API combines sophisticated routing algorithms with the open and free road network data of the OpenStreetMap (OSM) project. To calculate the shortest path for a bike ride, we pass the start and end station's latitude and longitude to return the estimated duration (in seconds) and distance (in meters).
 
 ### OpenWeather API
 
@@ -49,7 +48,7 @@ To get estimated trip time, we used the [OSRM API](http://project-osrm.org/docs/
 To gather historical weather data, we used [OpenWeather's One Call API](https://openweathermap.org/api/one-call-3#data). 
             
 We gathered the following data points from the API:
-- Tempature (in Fahrenheit)
+- Temperature (in Fahrenheit)
 - Humidity
 - Wind Speed
 - Weather
@@ -62,25 +61,21 @@ Due to the cost per call model, we decided to limit our cost by only using the l
 - API Key from OpenWeather
 - AWS Account
 - [PostgreSQL (Desktop)](https://www.postgresql.org/)
-- Requiremnt.txt
-
-## Configuration
+- Docker Desktop
+- requirements.txt
 
 ## Project Details
-For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using AWS platform, Python, and Spark.
+For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using AWS platform, Python, and Spark. 
 
-## Architecture
-Here is an overview for our project architecture:
-
-![project_arch](images/project_arch.png)
+Below are the steps we have taken to build out this project:
 
 ### Step 1: Gather the data
-We first needed to extract the necisary data from Divvy's website, make API calls to OSRM and OpenWeather API, and clean the data set
+We first needed to extract the necessary data from Divvy's website, make API calls to OSRM and OpenWeather API, and clean the data set
 
 ### Step 2: Load csv file into AWS S3 Bucket
 To create an Amazon Simple Storage Service (S3) bucket, we needed to set up an [AWS account](https://aws.amazon.com/) and then [setup the S3 bucket](https://www.sqlshack.com/getting-started-with-amazon-s3-and-python/). The bucket name for our S3 bucket is `msds436-final`. 
 
-Using Python, we were able to automate this proces to load the created csv files into our S3 bucket. The Python script creates a folder called `files` in the S3 bucket and saves the csv file in it.
+Using Python, we were able to automate this process to load the created csv files into our S3 bucket. The Python script creates a folder called `files` in the S3 bucket and saves the csv file in it.
 
 **Python example:**
 
@@ -156,15 +151,28 @@ with Amazon RDS](https://aws.amazon.com/getting-started/hands-on/create-connect-
 
 ![python_query](images/python_q_dl.PNG)
 
-## Deploy Streamlit Application
+### Step 4: Run EDA to exam the data
+[WAITING FOR INFO]
+### Step 5: Run models
+The first ML objective of the project was to use divvy ride and weather data to identify opportunities for internal cost savings, and to predict station over and under supply to anticipate bike transfer needs.
 
-### Docker
+To identify internal cost saving opportunities, we aggregate daily departures and arrivals by station for the month of September. We then collect the maximum daily departure and maximum daily arrival for each station, and identify stations with a maximum departure and arrival of less than or equal to two for the entire month of September. We identify these stations as “low-traffic stations,” and export this list of 480 stations for consideration for closure. To make a final decision, however, we recommend an analysis of year-round data to account for seasonal trends that may influence station usage.
 
+To anticipate bike transfer needs, we identify mid- to high-traffic stations using the same methodology as explained above. We focus the remainder of our analysis on these higher traffic stations, assuming their traffic will contribute to station supply and shortage most meaningfully. In total, 481 stations were selected.
 
-### AWS
+After correlation and autocorrelation analysis the following predictive features were selected for the model: weekday (binary), average daily temperature, average daily windspeed, total daily rain, day of the week, one-day ride count lag, two-day ride count lag, and a one-hot encoding of a weather description (“clear”, “clouds”, “drizzle”, “mist”, “rain”, “thunderstorm” and “smoke”).
+
+Two ordinary least squares regression was performed on each station: one for daily arrivals and one for daily departures. These predictions were pushed into a single data frame and their differentials calculated. The forecasted differential identifies stations with a predicted overage supply, and stations with a predicted bike shortage—these forecasts will inform bike relocation efforts, and prevent lost rental opportunities due to bike shortage at high-demand stations.
+
+We recommend the next step of this project be to use the latitude and longitude station data to identify station proximity, and recommend bike movement between stations with overage and shortage within close physical proximity—furthering cost saving efforts.
+
+### Step 6: Results
+
+### Step 7: Build and Deploy Streamlit Application
+### Pushing Docker Image in AWS
 - Download [Docker](https://docs.docker.com/get-docker/) for desktop and open it when download. Docker needs to run in the background for the following to work.
 - Download the [AWS CLI Tool](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) for desktop.
-- In the comand line, set your AWS Key ID and AWS Key buy running:
+- In the command line, set your AWS Key ID and AWS Key buy running:
 		
 		aws configure
 
@@ -186,7 +194,7 @@ with Amazon RDS](https://aws.amazon.com/getting-started/hands-on/create-connect-
 
 		docker push public.ecr.aws/k3u1k7f7/msds436-final:latest 
 
-Once the image is pushed, you will see it in your AWS repositorie. Note that you will want to copy the URI to create the ECS cluster (found in Elastic Container Service).
+Once the image is pushed, you will see it in your AWS repository. Note that you will want to copy the URI to create the ECS cluster (found in Elastic Container Service).
 
 ![aws_ec2](images/aws_ec2.PNG)
 
@@ -200,28 +208,35 @@ Once the image is pushed, you will see it in your AWS repositorie. Note that you
 
 ![aws_ec3](images/aws_ec3.PNG)
 
-- Leave the rest of the Task Definition as defult and click create
+- Leave the rest of the Task Definition as default and click create
 - Go back to the cluster and assign the task ([see video](https://youtu.be/Jc5GI3v2jtE?t=657)).
 - Go to EC2 Dashboard, click on 'Instances', then open the public URL. Your streamlit app should now be deployed.
 
 ![aws_ec4](images/aws_ec4.PNG)
 
+### Step 8: Recommendations and next steps
+[WAITING FOR INFO]
+
+## Architecture
+The architecture shown below represents a combination of Proof-of-Concept (PoC) structure and eventual production environment. The established architecture is a skeleton for scalable project value delivery. Current project state includes local consumption of static data, locally-developed and tested models, a GitHub repository for initial DevOps management, and a Docker-containerized public deployment via Streamlit and the AWS cloud.
+
+Future state would include additional DevOps functionality, as well as cloud-based MLOps tool utilization for model monitoring, infrastructure auto-scaling, and backend model artifact API delivery.
+
+
+![project_arch](images/project_arch.png)
+[WAITING FOR INFO]
+
 ## EDA
+EDA was performed in PySpark and Pandas
 
-## Models
-The first ML objective of the project was to use divvy ride and weather data to identify opportunities for internal cost savings, and to predict station over and under supply to anticipate bike transfer needs.
+[WAITING FOR INFO]
 
-To identify internal cost saving opportunities, we aggregate daily departures and arrivals by station for the month of September. We then collect the maximum daily departure and maximum daily arrival for each station, and identify stations with a maximum departure and arrival of less than or equal to two for the entire month of September. We identify these stations as “low-traffic stations,” and export this list of 480 stations for consideration for closure. To make a final decision, however, we recommend an analysis of year-round data to account for seasonal trends that may influence station usage.
-
-To anticipate bike transfer needs, we identify mid- to high-traffic stations using the same methodology as explained above. We focus the remainder of our analysis on these higher traffic stations, assuming their traffic will contribute to station supply and shortage most meaningfully. In total, 481 stations were selected.
-
-After correlation and autocorrelation analysis the following predictive features were selected for the model: weekday (binary), average daily temperature, average daily windspeed, total daily rain, day of the week, one-day ride count lag, two-day ride count lag, and a one-hot encoding of a weather description (“clear”, “clouds”, “drizzle”, “mist”, “rain”, “thunderstorm” and “smoke”).
-
-Two ordinary least squares regression was performed on each station: one for daily arrivals and one for daily departures. These predictions were pushed into a single data frame and their differentials calculated. The forecasted differential identifies stations with a predicted overage supply, and stations with a predicted bike shortage—these forecasts will inform bike relocation efforts, and prevent lost rental opportunities due to bike shortage at high-demand stations.
-
-We recommend the next step of this project be to use the latitude and longitude station data to identify station proximity, and recommend bike movement between stations with overage and shortage within close physical proximity—furthering cost saving efforts.
+## Project Limitations
+[WAITING FOR INFO]
 
 ## Future Enhancements
+[WAITING FOR INFO]
+
 
 ## Project Owners
 - [Katie Gaertner](https://github.com/katiegaertner)

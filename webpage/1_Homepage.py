@@ -28,7 +28,7 @@ with st.container():
     st.write('''As a leading bike share service in the city of Chicago, [Divvy's data](https://ride.divvybikes.com/system-data) offers unique opportunities to model human flow patterns.
             Our internal team will leverage Divvy's data to create insights into human movement in Chicago. 
             These insights will directly increase Divvy's enterprise value through internal projects and resale opportunities.''')
-
+    st.markdown('''For more details on our process, code and references, please see our [GitHub Repository](https://github.com/DrakeData/MSDS436-FINAL).''')
 # --- Use Case ---
 with st.container():
     st.write("---")

@@ -1,6 +1,10 @@
 from PIL import Image
 import requests
 import streamlit as st
+import pandas as pd
+import folium
+from folium import plugins
+from folium.plugins import MarkerCluster
 
 # ---- MAIN TAB SECTION ----
 # emoji cheatsheet: https://www.webfx.com/tools/emoji-cheat-sheet/
@@ -19,7 +23,18 @@ def load_lottieurl(url):
 # ---- LOAD ASSETS ----
 
 
-# --- About the Data ---
+# --- EDA ---
+# Load in the data
+
+low_traffic_df = pd.read_csv('https://raw.githubusercontent.com/katiegaertner/Fraud-Detection/main/low_traffic_stations.csv')
+low_traffic_df['max_daily_traffic'] = low_traffic_df['max_departure'] + low_traffic_df['max_arrival']
+
+
 # Divvy bike data
 with st.container():
     st.title("Exploratory Data Analysis (EDA)")
+    st.write("On this page, we will dig deeper into the data to get a better \
+    understanding of it.")
+    
+    with st.container():
+        st.write("---")
