@@ -58,11 +58,11 @@ Due to the cost per call model, we decided to limit our cost by only using the l
 
 ## Requirements
 (Need to update)
-- API Key from OpenWeather
-- AWS Account
+- [API Key from OpenWeather](https://openweathermap.org/api/one-call-3)
+- [AWS Account](https://aws.amazon.com/)
 - [PostgreSQL (Desktop)](https://www.postgresql.org/)
-- Docker Desktop
-- requirements.txt
+- [Docker (Desktop)](https://docs.docker.com/get-docker/)
+- [requirements.txt]()
 
 ## Project Details
 For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using AWS platform, Python, and Spark. 
@@ -224,7 +224,6 @@ Future state would include additional DevOps functionality, as well as cloud-bas
 
 
 ![project_arch](images/project_arch.png)
-[WAITING FOR INFO]
 
 ## EDA
 EDA was performed in PySpark and Pandas
