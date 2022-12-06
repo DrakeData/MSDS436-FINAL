@@ -39,19 +39,9 @@ img_burst_quadrant_station = Image.open("images/burst_quadrant_station.png")
 # Divvy bike data
 with st.container():
     st.title("Exploratory Data Analysis (EDA)")
-    st.write("On this page, we will dig deeper into the data to get a better \
-    understanding of it.")
-    st.markdown('''**NOTE:** EDA was performed in PySpark and Pandas.''')
     with st.container():
         st.write("---")
-        st.image(img_spark_eda)
-        st.markdown('''The above snip of code demonstrates initial 
-        statistics of the Divvy dataset, processed using Spark. 
-        Spark was used to level-set on feature characteristics 
-        before executing data cleansing, wrangling, and feature 
-        enrichment.''')
-    with st.container():
-        st.write("---")
+        st.markdown('''**NOTE:** EDA was performed in PySpark and Pandas.''')
         st.write("##")
         image_column, text_column = st.columns((1,2))
         with image_column:
@@ -167,3 +157,11 @@ with st.container():
             interest, this is an important distinction to understand what 
             station resources are contributing to human flow, and 
             which are not.''')
+        with st.container():
+            st.write("---")
+            st.image(img_spark_eda)
+            st.markdown('''The above snip of code demonstrates initial 
+            statistics of the Divvy dataset, processed using Spark. 
+            Spark was used to level-set on feature characteristics 
+            before executing data cleansing, wrangling, and feature 
+            enrichment.''')

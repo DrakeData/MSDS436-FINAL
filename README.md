@@ -207,13 +207,22 @@ Two ordinary least squares regression was performed on each station: one for dai
 
 We recommend the next step of this project be to use the latitude and longitude station data to identify station proximity, and recommend bike movement between stations with overage and shortage within close physical proximity—furthering cost saving efforts.
 
+
 #### Human Flow
 The purpose of utilizing machine learning for Chicago bicycle travel is to predict ride time for any given start/end station, day, time, and quadrant of interest. An actual ride time that has a significantly higher value than predicted ride time can be used to indicate propensity-to-buy. When overlaid with thousands of other trips, common routes can be established in order to highlight areas for business investment, marketing strategies, and low-hanging fruit pedestrian sales opportunities. This is additionally substantiated by the large volume.
 
 A small (n_estimators = 10, random_state = 10) randomforest model was selected as an initial, simple model to demonstrate effectiveness of concept, given onehotencoded data that included: bike type, member class, predicted time, historical time differences, temperature, quadrant, start hour, and end hour. Actual time was the target variable. The model performed with 72.667% accuracy on the test data set, despite relatively low correlation between variables, and relatively low feature importance. 
 
 ### Step 6: Results
-[WAITING ON INFO]
+For every mid to high traffic station, we have a departure and arrival forcast. We calulate the difference and deploy it as the forecasted surplus/shortage.
+
+#### Bike Surplus Data Frame
+
+![df_surplus](images/df_surplus.png)
+
+#### Bike Shortage Data Frame
+
+![df_shortage](images/df_shortage.png)
 
 ### Step 7: Build and Deploy Streamlit Application
 ### Pushing Docker Image in AWS
@@ -283,18 +292,15 @@ The architecture shown below represents a combination of Proof-of-Concept (PoC) 
 
 Future state would include additional DevOps functionality, as well as cloud-based MLOps tool utilization for model monitoring, infrastructure auto-scaling, and backend model artifact API delivery.
 
-
 ![project_arch](images/project_arch.png)
 
-## EDA
-
-
 ## Project Limitations
-[WAITING FOR INFO]
+Due to being on a student budget, we errored on the side of caution of limiting our expenses, which affected our project’s performance. Please see 'Future Enhancements' for what we would want to do next to enhance what we have built.
 
 ## Future Enhancements
-[WAITING FOR INFO]
-
+- Automate the monthly Divvy data pull in AWS and load the data into our Postgres Data Lake.
+- Build out APIs using Postman to connect tot other AWS services, such as SageMaker.
+- Enhance resources on our EC2 bucket so that our Streamlit app runs faster and can run real-time machine learning models.
 
 ## Project Owners
 - [Katie Gaertner](https://github.com/katiegaertner)

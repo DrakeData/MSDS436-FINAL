@@ -1,5 +1,3 @@
-from PIL import Image
-import requests
 import streamlit as st
 
 # ---- MAIN TAB SECTION ----
@@ -25,6 +23,6 @@ with st.container():
     st.write("##")
     st.write("Future state would include additional DevOps functionality, \
          as well as cloud-based MLOps tool utilization for model monitoring, \
-         infrastructure auto-scaling, and backend model artifact API delivery")
+         infrastructure auto-scaling, and backend model artifact API delivery.")
     st.write("##")
     st.image("https://lucid.app/publicSegments/view/cee8ca61-ba43-44e4-b2ad-314cc020608c/image.png")
