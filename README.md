@@ -1,13 +1,14 @@
 # MSDS436 - Final Project
 This repository contains code used for MSDS 436 Final Project
 
+**Check out our [website](http://ec2-18-217-209-168.us-east-2.compute.amazonaws.com/)!**
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [About the Data](#about-the-data)
 - [Requirements](#requirements)
 - [Project Details](#project-details)
 - [Architecture](#architecture)
-- [EDA](#eda)
 - [Project Limitations](#project-limitations)
 - [Future Enhancements](#future-enhancements)
 - [Project Owners](#project-owners)
@@ -62,6 +63,13 @@ Due to the cost per call model, we decided to limit our cost by only using the l
 - [PostgreSQL (Desktop)](https://www.postgresql.org/)
 - [Docker (Desktop)](https://docs.docker.com/get-docker/)
 - [requirements.txt](https://github.com/DrakeData/MSDS436-FINAL/blob/main/requirements.txt)
+
+## Architecture
+The architecture shown below represents a combination of Proof-of-Concept (PoC) structure and eventual production environment. The established architecture is a skeleton for scalable project value delivery. Current project state includes local consumption of static data, locally-developed and tested models, a GitHub repository for initial DevOps management, and a Docker-containerized public deployment via Streamlit and the AWS cloud.
+
+Future state would include additional DevOps functionality, as well as cloud-based MLOps tool utilization for model monitoring, infrastructure auto-scaling, and backend model artifact API delivery.
+
+![project_arch](images/project_arch.png)
 
 ## Project Details
 For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using AWS platform, Python, and Spark. 
@@ -240,7 +248,7 @@ For every mid to high traffic station, we have a departure and arrival forcast. 
 
 - Build Docker Image (make sure you are in the same directory as the Dockerfile built)
 			
-			docker build -f Dockerfile msds436-final-app:latest .
+			docker build -f Dockerfile -t msds436-final-app:latest .
 
 - Tag the image created
 
@@ -286,13 +294,6 @@ Once the image is pushed, you will see it in your AWS repository. Note that you 
 	- Leveraging a dataset that is thousands of times larger than the current scope would enable a model many more reference points from which to predict human flow on a time/place basis.
 3. Model Usability
 	- Once a more robust model is built, high-traffic, high-time-difference areas within the Chicago area can be assessed for propensity-to-buy mapping, enabling B2C investors or current business owners insights into the who, when, and where of potential bicyclist customers. 
-
-## Architecture
-The architecture shown below represents a combination of Proof-of-Concept (PoC) structure and eventual production environment. The established architecture is a skeleton for scalable project value delivery. Current project state includes local consumption of static data, locally-developed and tested models, a GitHub repository for initial DevOps management, and a Docker-containerized public deployment via Streamlit and the AWS cloud.
-
-Future state would include additional DevOps functionality, as well as cloud-based MLOps tool utilization for model monitoring, infrastructure auto-scaling, and backend model artifact API delivery.
-
-![project_arch](images/project_arch.png)
 
 ## Project Limitations
 Due to being on a student budget, we errored on the side of caution of limiting our expenses, which affected our project’s performance. Please see 'Future Enhancements' for what we would want to do next to enhance what we have built.
