@@ -17,5 +17,5 @@ img_team = Image.open("images/team_info.png")
 
 with st.container():
     st.title("About Us:")
-    st.subheader("This project was created by [Nick Drake](https://github.com/DrakeData), [Kaite Gaertner](https://github.com/katiegaertner), and [Carlin Gerstenberger](https://github.com/carlin-gerstenberger) for MSDS 436.")
+    st.subheader("This project was created by [Nick Drake](https://github.com/DrakeData), [Katie Gaertner](https://github.com/katiegaertner), and [Carlin Gerstenberger](https://github.com/carlin-gerstenberger) for MSDS 436.")
     st.image(img_team)
