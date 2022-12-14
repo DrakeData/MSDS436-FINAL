@@ -1,7 +1,7 @@
 # MSDS436 - Final Project
 This repository contains code used for MSDS 436 Final Project
 
-**Check out our [website](http://ec2-18-217-209-168.us-east-2.compute.amazonaws.com/)!**
+**The website is no longer active, but please check out our [video showcasing it](https://www.loom.com/share/2f0a8059b40345e095da1995be49abd1).**
 
 ## Table of Contents
 - [Introduction](#introduction)
